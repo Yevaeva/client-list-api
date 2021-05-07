@@ -40,8 +40,8 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 
 ## Project installation and usage
 
-    $ git clone https://github.com/MASISKAR/todo-list-api
-    $ cd todo-list-api
+    $ git clone https://github.com/Yevaeva/client-list-api.git
+    $ cd client-list-api
     $ npm install
 
 Remove `.sample` extension from configuration files located in `/config/env/`

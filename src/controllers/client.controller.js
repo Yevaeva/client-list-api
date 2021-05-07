@@ -65,16 +65,15 @@ class ClientController {
                 phone: data.phone
             }
 
-            let [name] = data.providers
+            
             const providers = await providerSchema.find({name: {$in: data.providers}}).exec();
             console.log('providers', providers)
 
             let prov = providers.map(p=>p._id) 
-            console.log(prov,'prov')
             clientSchema.create({
                 ...clientData,
                 providers: [...prov]
-            }, async function (err, newClient) {
+            }, async function (err) {
                 if (err) return err
                 const client = await clientSchema.findOne({ name: clientData.name }).populate({ path: 'providers' }).exec();
                 if (!client) throw errorConfig.taskNotFound; 
@@ -88,6 +87,54 @@ class ClientController {
             next(err)
         }
     }
+
+        update = async (req, res, next) => {
+            try {
+                const client = await clientSchema.findOne({
+                    _id: req.params.id,
+                   
+                });
+                if (!client) throw errorConfig.taskNotFound;
+                
+                const {name, email, phone} = req.body;
+                name && ( client.name = name);
+                email && (client.email = email);
+                phone && ( client.phone = phone);
+
+                const providers = await providerSchema.find({name: {$in: req.body.providers}}).exec();
+                console.log('providers', providers)
+    
+                let prov = providers.map(p=>p._id) 
+                  prov && ( client.providers = [...prov]);
+                await client.save();
+                console.log(client)
+
+                const editedClient = await clientSchema.findOne({ _id: req.params.id,}).populate({ path: 'providers' }).exec();
+                if (!client) throw errorConfig.taskNotFound; 
+                console.log(editedClient)
+                res.json(editedClient);
+              
+            } catch (err) {
+                next(err)
+            }
+        }
+
+        deleteClient = async (req, res, next) => {
+            try {
+                const client = await clientSchema.findOneAndDelete({
+                    _id: req.params.id,
+                   
+                });
+                
+                if (!client) throw errorConfig.taskNotFound;
+                res.json({success: true});
+            } catch (err) {
+                next(err)
+            }
+        }
+        
+        
+    
 
 }
 

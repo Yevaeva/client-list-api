@@ -12,6 +12,12 @@ clientRouter.get('/', /*auth,*/ clientController.getClients);
 
 clientRouter.post('/', /*auth,*/  clientController.create);
 
+clientRouter.put('/:id', /*auth,*/  clientController.update);
+
+clientRouter.delete('/:id', /*auth,*/  clientController.deleteClient);
+
+
+
 
 
 module.exports = clientRouter;

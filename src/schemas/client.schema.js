@@ -9,19 +9,19 @@ const ClientSchema = new Schema(
         }],
         name: {
 			type: String,
+			required:true
 		},
 		email: {
 			type: String,
 			unique: true,
 			trim: true,
-			sparse: true
-		},
-		password: {
-			type: String
+			sparse: true,
+			required:true
 		},
 		
 		phone: {
 			type: Number,
+			required:true
 		},
 	
 	},

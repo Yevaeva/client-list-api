@@ -12,6 +12,10 @@ providerRouter.get('/', /*auth,*/ providerController.getProviders);
 
 providerRouter.post('/', /*auth,*/  providerController.createProvider);
 
+providerRouter.put('/:id', /*auth,*/  providerController.updateProvider);
+
+providerRouter.delete('/:id', /*auth,*/  providerController.deleteProvider);
+
 
 
 module.exports = providerRouter;
