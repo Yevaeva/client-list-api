@@ -22,6 +22,8 @@ class ProviderController {
 
         try {
             const data = req.body
+            console.log(data) 
+
             const newProvider = await providerSchema.create({
                 name: data.name
             });
@@ -34,6 +36,7 @@ class ProviderController {
             });
         }
         catch (err) {
+            console.log(err)
             next(err)
         }
     }

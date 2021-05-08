@@ -1,3 +1,4 @@
+'use strict';
 
 Promise = require('bluebird');
 const  express = require('express');
@@ -23,11 +24,17 @@ app.use(
 app.is_running = Promise.pending();
 app.db_connect = require('./mongo');
 
-// app.get('/downloads/:filename', (req, res)=>{
-//   const filePath = path.join(__dirname, '../../public/downloads/'+req.params.filename);
-//   res.download(filePath);
-// });
+app.get('/downloads/:filename', (req, res)=>{
+  const filePath = path.join(__dirname, '../../public/downloads/'+req.params.filename);
+  res.download(filePath);
+});
 
+
+app.use(body_parser.json({limit: '10mb'}));
+app.use(body_parser.urlencoded({
+  limit: '10mb',
+  extended: true
+}));
 
 app.use(cors());
 
@@ -64,16 +71,16 @@ app.use((req, res, next) => {
   next();
 });
 
-if (process.env.NODE_ENV === 'dev') {
-  app.use(logger('dev'));
+
   app.use(error_handler())
-}
+
 
 app.enable('case sensitive routing');
 app.enable('strict routing');
 
 require('./routes')(app);
 
+// Handle errors
 require('./error-handler')(app);
 
 module.exports = app;

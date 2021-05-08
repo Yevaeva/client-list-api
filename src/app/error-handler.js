@@ -65,8 +65,12 @@ module.exports = app => {
   // error handler
   app.use((err, req, res, next) => {
     const error = format_err(err);
-    let unexpected_error = false;  
+    let unexpected_error = false;
+    
+   
+    
     if (error.private) return;
+    
     if (unexpected_error) res.status(500).json({error: errorConfig.defaultError});
     else res.status(error.status).json({error});
   });

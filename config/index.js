@@ -1,14 +1,15 @@
-const envPath = './config/env/' + process.env.NODE_ENV + '.env';
+const envPath = './config/env/' +  '.env';
 require('dotenv').config({path: envPath});
 
-const server = require('./server.config'),
-  mongo = require('./mongo.config'),
-  error = require('./error.config')
+const server = require('./server.config')
+const  mongo = require('./mongo.config')
+const  error = require('./error.config')
 
 
-module.exports = { 
+module.exports = {
   env: process.env.NODE_ENV,
   server,
   mongo,
-  error,
+  error
+
 };
