@@ -21,9 +21,9 @@ class TaskController {
     getSingle = async (req, res, next) => {
         try {
             const task = await taskSchema.findOne({
-                _id: req.params.id,
-                // owner: res.locals.userId
-                //fixme
+                _id: req.params.id, 
+                // owner: res.locals.userId  
+                //fixme 
             });
             if (!task) throw errorConfig.taskNotFound;
             res.json(task.toObject());
@@ -77,7 +77,7 @@ class TaskController {
                     $in: (req.body.tasks).map(ObjectId)
                 }
             });
-            if (result.deletedCount === 0) throw errorConfig.nothingToRemove;
+            
             res.json({success: true});
         } catch (err) {
             next(err);

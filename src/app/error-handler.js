@@ -1,22 +1,32 @@
-'use strict';
 
-const create_error = require('http-errors'),
-  errorConfig = require('../../config/error.config');
+
+const create_error = require('http-errors');
+const  errorConfig = require('../../config/error.config');
 
 
 module.exports = app => {
   // tools
   let format_err = err => {
     if (err.ref) return errorConfig[err.ref];
-    
+   
     if (err.errors) {
       // format mongo unique error
       let errorKey = Object.keys(err.errors)[0];
+      if(err.errors.value){
+        return {
+          name: errorConfig.providerExists.name,
+          message: err.errors[errorKey].message,
+          status: errorConfig.providerExists.status,
+          private: err.private || false
+  
+        }
+      }
       return {
-        name: errorConfig.fieldAlreadyExists.name,
+        name: errorConfig.pathIsRequired.name,
         message: err.errors[errorKey].message,
-        status: errorConfig.fieldAlreadyExists.status,
+        status: errorConfig.pathIsRequired.status,
         private: err.private || false
+
       }
     } else {
       return {
@@ -40,17 +50,17 @@ module.exports = app => {
     let unexpected_error = false;
     
     // show errors for developers
-    if (!error.status || error.status >= 500 || error.private) {
-      unexpected_error = true;
-      if ( process.env.NODE_ENV === 'dev' ) {
-          console.log('####################');
-          console.log(err);
-        console.log('####################');
-      } else if (process.env.NODE_ENV === 'test') {
-        console.log(err);
-        process.exit(1);
-      }
-    }
+    // if (!error.status || error.status >= 500 || error.private) {
+    //   unexpected_error = true;
+    //   if ( process.env.NODE_ENV === 'dev' ) {
+    //       console.log('####################');
+    //       console.log(err);
+    //     console.log('####################');
+    //   } else if (process.env.NODE_ENV === 'test') {
+    //     console.log(err);
+    //     process.exit(1);
+    //   }
+    // }
     
     if (error.private) return;
     

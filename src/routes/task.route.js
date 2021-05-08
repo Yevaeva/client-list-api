@@ -1,6 +1,6 @@
 const express = require('express'),
   validator = require('../middlewares/validator.middleware'),
-  auth = require('../middlewares/auth.middleware'),
+
   taskRouter = express.Router(),
   taskController = require('../controllers/task.controller');
   
@@ -24,7 +24,7 @@ taskRouter.put('/:id', /*auth,*/ validator('task-update'), taskController.update
 // delete batch tasks
 taskRouter.patch('/', /*auth,*/ validator('task-delete-batch'), taskController.deleteBatch);
 
-// delete single task
+// delete single task 
 taskRouter.delete('/:id', /*auth,*/ taskController.delete);
 
 

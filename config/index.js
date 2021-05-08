@@ -3,13 +3,12 @@ require('dotenv').config({path: envPath});
 
 const server = require('./server.config'),
   mongo = require('./mongo.config'),
-  error = require('./error.config'),
-  auth = require('./auth.config');
+  error = require('./error.config')
 
-module.exports = {
+
+module.exports = { 
   env: process.env.NODE_ENV,
   server,
   mongo,
   error,
-  auth,
 };

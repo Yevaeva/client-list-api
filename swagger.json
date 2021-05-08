@@ -27,7 +27,7 @@
           "tags": [
             "Client"
           ],
-          "description": "Create new client in system",
+          "summary": "Create new client in system",
           "parameters": [
             {
               "name": "client",
@@ -75,20 +75,7 @@
             "type": "string"
           }
         ],
-        "get": {
-          "tags": [
-            "Client"
-          ],
-          "summary": "Get user with given ID",
-          "responses": {
-            "200": {
-              "description": "User is found",
-              "schema": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          }
-        },
+        
         "delete": {
           "summary": "Delete client with given ID",
           "tags": [
@@ -143,7 +130,7 @@
           "tags": [
             "Provider"
           ],
-          "description": "Create new provider in system",
+          "summary": "Create new provider in system",
           "parameters": [
             {
               "name": "provider",

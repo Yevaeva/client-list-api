@@ -1,5 +1,6 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const {Schema} = mongoose;
+const  beautify_unique = require('mongoose-beautiful-unique-validation');
 
 const ClientSchema = new Schema(
 	{
@@ -16,7 +17,7 @@ const ClientSchema = new Schema(
 			unique: true,
 			trim: true,
 			sparse: true,
-			required:true
+			required:true,
 		},
 		
 		phone: {
@@ -27,5 +28,8 @@ const ClientSchema = new Schema(
 	},
 	
 );
+ClientSchema.plugin(beautify_unique,{
+	defaultMessage: "Email duplication detected"
+  });
 
 module.exports = mongoose.model('Client', ClientSchema);

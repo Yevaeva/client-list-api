@@ -1,7 +1,6 @@
-'use strict';
 
-const express = require('express'),
-      indexRouter = express.Router();
+const express = require('express');
+const indexRouter = express.Router();
 
 /* GET home page. */
 indexRouter.get('/', (req, res) => {

@@ -1,6 +1,6 @@
-const express = require('express')
-const validator = require('../middlewares/validator.middleware')
-const providerRouter = express.Router()
+const express = require('express');
+const validator = require('../middlewares/validator.middleware');
+const providerRouter = express.Router();
 const providerController = require('../controllers/provider.controller');
   
 /**
@@ -8,13 +8,13 @@ const providerController = require('../controllers/provider.controller');
  **/
 
 
-providerRouter.get('/', /*auth,*/ providerController.getProviders);
+providerRouter.get('/', providerController.getProviders);
 
-providerRouter.post('/', /*auth,*/  providerController.createProvider);
+providerRouter.post('/', providerController.createProvider);
 
-providerRouter.put('/:id', /*auth,*/  providerController.updateProvider);
+providerRouter.put('/:id',   providerController.updateProvider);
 
-providerRouter.delete('/:id', /*auth,*/  providerController.deleteProvider);
+providerRouter.delete('/:id', providerController.deleteProvider);
 
 
 

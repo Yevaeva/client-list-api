@@ -1,0 +1,52 @@
+{
+  "title": "create client",
+  "type": "object",
+  "properties": {
+    "body": {
+      "type": "object",
+      "properties": {
+        
+        "_id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "email": {
+          "type": "string",
+          "uniqueItems": true,
+          "format": "email"
+        },
+        "name": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "number"
+        },
+        "providers":{
+          "type": "array",
+          "items":{
+            "type":"object",
+            "properties":{
+              "_id":{
+                "type":"string",
+                "uniqueItems": true
+              },
+              "name":{
+                "type":"string",
+                "uniqueItems": true
+              }
+            } 
+
+        }
+        }
+      },
+      "required": [
+        "email",
+        "name",
+        "phone"
+      ]
+    }
+  },
+  "required": [
+    "body"
+  ]
+}

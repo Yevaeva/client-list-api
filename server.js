@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-'use strict';
 
 // Set default environment variable
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
@@ -22,10 +20,6 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
- const swaggerUi = require('swagger-ui-express'),
- swaggerDocument = require('./swagger.json');
- 
-
 
 const server = require('http').createServer(app); 
 
@@ -102,7 +96,6 @@ function on_listening() {
   debug('Listening on ' + bind);
   console.log('App listening on: ' + JSON.stringify(addr));
   
-  // TODO: make sure that all instances are up and running then resolve function (e.g. db connection or other async stuff)
   app.is_running.resolve();
 }
 

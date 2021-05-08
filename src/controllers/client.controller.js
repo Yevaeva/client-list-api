@@ -1,12 +1,10 @@
-const errorConfig = require('../../config/error.config')
+const errorConfig = require('../../config/error.config');
 const clientSchema = require('../schemas/client.schema');
 const providerSchema = require('../schemas/provider.schema');
-const mongoose = require('mongoose')
-const toId = mongoose.Types.ObjectId
+
+
 
 class ClientController {
-
-
 
     getClients = async (req, res, next) => {
         try {
@@ -20,7 +18,7 @@ class ClientController {
             const sort = {};
 
             const clients = await clientSchema.find(dbQuery).sort(sort).populate({ path: 'providers' }).exec();
-            if (!clients) throw errorConfig.taskNotFound;
+            if (!clients) throw errorConfig.clientNotFound;
 
             res.json(clients);
 
@@ -41,7 +39,6 @@ class ClientController {
             }
 
             const names = data.providers.map((prov) => prov.name)
-
             const providers = await providerSchema.find({ name: { $in: names } }).exec();
             console.log('providers', providers)
             console.log('names', names)
@@ -50,10 +47,8 @@ class ClientController {
             clientSchema.create({
                 ...clientData,
                 providers: [...prov]
-            }, async function (err) {
-                if (err) return err
+            }, async function () {
                 const client = await clientSchema.findOne({ email: clientData.email }).populate({ path: 'providers' }).exec();
-                if (!client) throw errorConfig.taskNotFound;
                 console.log('client', client)
                 res.json(client);
 
@@ -78,7 +73,7 @@ class ClientController {
             email && (client.email = email);
             phone && (client.phone = phone);
 
-            const names = req.body.providers.map(p=>p.name)
+            const names = req.body.providers.map(p => p.name)
             const providers = await providerSchema.find({ name: { $in: names } }).exec();
             console.log('providers', providers)
 
@@ -110,10 +105,6 @@ class ClientController {
             next(err)
         }
     }
-
-
-
-
 }
 
 module.exports = new ClientController();

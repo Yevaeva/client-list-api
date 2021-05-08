@@ -8,13 +8,13 @@ const clientController = require('../controllers/client.controller');
  **/
 
 
-clientRouter.get('/', /*auth,*/ clientController.getClients);
+clientRouter.get('/', clientController.getClients);
 
-clientRouter.post('/', /*auth,*/  clientController.create);
+clientRouter.post('/', clientController.create);
 
-clientRouter.put('/:id', /*auth,*/  clientController.update);
+clientRouter.put('/:id', clientController.update);
 
-clientRouter.delete('/:id', /*auth,*/  clientController.delete);
+clientRouter.delete('/:id', clientController.delete); 
 
 
 

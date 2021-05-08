@@ -40,15 +40,14 @@ app.use(cors());
 
 app.use('/uploads', express.static('uploads'));
 app.use('/static', express.static('public'));
-// Should be placed before express.static
-app.use(compress());
+
+
+app.use(compress()); 
 
 // Showing stack errors
 app.set('showStackError', true);
 
-// Use helmet to secure Express headers
-// later on use advanced options for more flexibility
-// https://github.com/helmetjs/helmet
+
 app.use(helmet());
 
 app.use((err, req, res, next) => {
