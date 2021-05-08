@@ -22,7 +22,13 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-const server = require('http').createServer(app);
+ const swaggerUi = require('swagger-ui-express'),
+ swaggerDocument = require('./swagger.json');
+ 
+
+
+const server = require('http').createServer(app); 
+
 
 /**
  * Listen on provided port, on all network interfaces.

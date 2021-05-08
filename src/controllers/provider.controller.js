@@ -12,9 +12,9 @@ class ProviderController {
     getProviders = async (req, res, next) => {
         try {
          
-            const dbQuery = {};
+           
 
-            const providers = await providerSchema.find(dbQuery).exec();
+            const providers = await providerSchema.find({}).exec();
             if (!providers) throw errorConfig.taskNotFound;
 
             res.json(providers);  
@@ -28,28 +28,13 @@ class ProviderController {
       
         try {
             const data = req.body
-            // const clientData = {
-            //     name: data.name,
-            //     email: data.email,
-            //     phone: data.phone
-            // }
-
+            
             const newProvider = await providerSchema.create({
                 name: data.name
             });
 
             newProvider.save(function (err) {
                 if (err) return handleError(err);
-
-                // const newClient = new clientSchema({  
-                //     ...clientData,
-                //     providers: [newProvider._id]// assign the _id from the person
-                // });
-
-                // newClient.save(function (err) {
-                //     if (err) return handleError(err);
-                //     // that's it!
-                // });
                 res.json(newProvider); 
 
             });

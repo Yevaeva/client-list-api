@@ -14,7 +14,7 @@ clientRouter.post('/', /*auth,*/  clientController.create);
 
 clientRouter.put('/:id', /*auth,*/  clientController.update);
 
-clientRouter.delete('/:id', /*auth,*/  clientController.deleteClient);
+clientRouter.delete('/:id', /*auth,*/  clientController.delete);
 
 
 

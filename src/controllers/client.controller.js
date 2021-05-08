@@ -24,31 +24,6 @@ class ClientController {
 
             res.json(clients);
 
-
-
-
-            // getMessagesInRoom = async (req, res) => {
-
-            //     const info = await MsgModel
-            //         .find({ to: req.params.roomId })
-            //         .sort({ created: -1 })
-            //         .limit(50)
-            //         .populate({ path: 'senderId' });
-            //     let result = info.map((i) => {
-            //         return {
-            //             body: i.text,
-            //             id: i._id,
-            //             room: i.to,
-            //             user: {
-            //                 id: i.senderId._id,
-            //                 name: i.senderId.name,
-            //                 picture: "/Messanger/static/media/avatar.79bfd233.png"
-            //             }
-            //         }
-            //     })
-            //     res.json({ 'messages': result })
-            // }
-
         }
         catch (err) {
             next(err)
@@ -61,25 +36,27 @@ class ClientController {
             const data = req.body
             const clientData = {
                 name: data.name,
-                email: data.email,  
+                email: data.email,
                 phone: data.phone
             }
 
-            
-            const providers = await providerSchema.find({name: {$in: data.providers}}).exec();
-            console.log('providers', providers)
+            const names = data.providers.map((prov) => prov.name)
 
-            let prov = providers.map(p=>p._id) 
+            const providers = await providerSchema.find({ name: { $in: names } }).exec();
+            console.log('providers', providers)
+            console.log('names', names)
+
+            let prov = providers.map(p => p._id)
             clientSchema.create({
                 ...clientData,
                 providers: [...prov]
             }, async function (err) {
                 if (err) return err
-                const client = await clientSchema.findOne({ name: clientData.name }).populate({ path: 'providers' }).exec();
-                if (!client) throw errorConfig.taskNotFound; 
-                console.log(client)
+                const client = await clientSchema.findOne({ email: clientData.email }).populate({ path: 'providers' }).exec();
+                if (!client) throw errorConfig.taskNotFound;
+                console.log('client', client)
                 res.json(client);
-              
+
             });
         }
         catch (err) {
@@ -88,53 +65,54 @@ class ClientController {
         }
     }
 
-        update = async (req, res, next) => {
-            try {
-                const client = await clientSchema.findOne({
-                    _id: req.params.id,
-                   
-                });
-                if (!client) throw errorConfig.taskNotFound;
-                
-                const {name, email, phone} = req.body;
-                name && ( client.name = name);
-                email && (client.email = email);
-                phone && ( client.phone = phone);
+    update = async (req, res, next) => {
+        try {
+            const client = await clientSchema.findOne({
+                _id: req.params.id,
 
-                const providers = await providerSchema.find({name: {$in: req.body.providers}}).exec();
-                console.log('providers', providers)
-    
-                let prov = providers.map(p=>p._id) 
-                  prov && ( client.providers = [...prov]);
-                await client.save();
-                console.log(client)
+            });
+            if (!client) throw errorConfig.taskNotFound;
 
-                const editedClient = await clientSchema.findOne({ _id: req.params.id,}).populate({ path: 'providers' }).exec();
-                if (!client) throw errorConfig.taskNotFound; 
-                console.log(editedClient)
-                res.json(editedClient);
-              
-            } catch (err) {
-                next(err)
-            }
+            const { name, email, phone } = req.body;
+            name && (client.name = name);
+            email && (client.email = email);
+            phone && (client.phone = phone);
+
+            const names = req.body.providers.map(p=>p.name)
+            const providers = await providerSchema.find({ name: { $in: names } }).exec();
+            console.log('providers', providers)
+
+            let prov = providers.map(p => p._id)
+            prov && (client.providers = [...prov]);
+            await client.save();
+            console.log(client)
+
+            const editedClient = await clientSchema.findOne({ _id: req.params.id, }).populate({ path: 'providers' }).exec();
+            if (!client) throw errorConfig.taskNotFound;
+            console.log(editedClient)
+            res.json(editedClient);
+
+        } catch (err) {
+            next(err)
         }
+    }
 
-        deleteClient = async (req, res, next) => {
-            try {
-                const client = await clientSchema.findOneAndDelete({
-                    _id: req.params.id,
-                   
-                });
-                
-                if (!client) throw errorConfig.taskNotFound;
-                res.json({success: true});
-            } catch (err) {
-                next(err)
-            }
+    delete = async (req, res, next) => {
+        try {
+            const client = await clientSchema.findOneAndDelete({
+                _id: req.params.id,
+
+            });
+
+            if (!client) throw errorConfig.taskNotFound;
+            res.json({ success: true });
+        } catch (err) {
+            next(err)
         }
-        
-        
-    
+    }
+
+
+
 
 }
 
