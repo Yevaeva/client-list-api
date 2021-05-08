@@ -12,11 +12,12 @@
     status: 409
   },
 
-  providerExists: {
-    name: "ProviderExists",
-    message: "Provider with that name already exists",
+  pathExists: {
+    name: "PathExists",
+    message: "Path  already exists",
     status: 409
   },
+
   pathIsRequired:{
     name: "PathIsRequired",
     message: "Path is required",
@@ -28,10 +29,10 @@
     message: "Provider is not found",
     status: 404
   },
-  emailOrPasswordNotFound: {
-    name: "emailOrPasswordNotFound",
-    message: "Invalid login or password",
-    status: 403
+  emailValidationError: {
+    name: "EmailValidationError",
+    message: "Invalid email",
+    status: 400
   },
   emailDuplicationError: {
     name: "emailDuplicationError",
@@ -44,10 +45,10 @@
     status: 400
   },
  
-  bearerInvalid: {
-    name: "bearerInvalid",
-    message: "bearer is invalid",
-    status: 401
+  notaNumber: {
+    name: "NotaNumber",
+    message: "Phone must be a number",
+    status: 400
   },
   
   clientNotFound: {
@@ -60,4 +61,4 @@
       message: "There is nothing to remove",
       status: 404
     }
-};
+}; 

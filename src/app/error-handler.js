@@ -12,11 +12,29 @@ module.exports = app => {
     if (err.errors) {
       // format mongo unique error
       let errorKey = Object.keys(err.errors)[0];
-      if(err.errors.value){
+      if(err.errors[errorKey].kind==="regexp"){
         return {
-          name: errorConfig.providerExists.name,
+          name: errorConfig.emailValidationError.name,
           message: err.errors[errorKey].message,
-          status: errorConfig.providerExists.status,
+          status: errorConfig.emailValidationError.status,
+          private: err.private || false
+  
+        }
+      }
+      else if(err.errors[errorKey].kind==="Number"){
+        return {
+          name: errorConfig.notaNumber.name,
+          message: errorConfig.notaNumber.message,
+          status: errorConfig.notaNumber.status,
+          private: err.private || false
+  
+        }
+      }
+      else if(err.errors[errorKey].value ){
+        return {
+          name: errorConfig.pathExists.name,
+          message: err.errors[errorKey].message,
+          status: errorConfig.pathExists.status,
           private: err.private || false
   
         }
@@ -47,23 +65,8 @@ module.exports = app => {
   // error handler
   app.use((err, req, res, next) => {
     const error = format_err(err);
-    let unexpected_error = false;
-    
-    // show errors for developers
-    // if (!error.status || error.status >= 500 || error.private) {
-    //   unexpected_error = true;
-    //   if ( process.env.NODE_ENV === 'dev' ) {
-    //       console.log('####################');
-    //       console.log(err);
-    //     console.log('####################');
-    //   } else if (process.env.NODE_ENV === 'test') {
-    //     console.log(err);
-    //     process.exit(1);
-    //   }
-    // }
-    
+    let unexpected_error = false;  
     if (error.private) return;
-    
     if (unexpected_error) res.status(500).json({error: errorConfig.defaultError});
     else res.status(error.status).json({error});
   });

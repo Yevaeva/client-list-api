@@ -1,6 +1,7 @@
 const errorConfig = require('../../config/error.config');
 const clientSchema = require('../schemas/client.schema');
 const providerSchema = require('../schemas/provider.schema');
+const mongoose = require('mongoose')
 
 
 
@@ -19,7 +20,6 @@ class ClientController {
 
             const clients = await clientSchema.find(dbQuery).sort(sort).populate({ path: 'providers' }).exec();
             if (!clients) throw errorConfig.clientNotFound;
-
             res.json(clients);
 
         }
@@ -32,59 +32,60 @@ class ClientController {
 
         try {
             const data = req.body
+            const names = data.providers.map((prov) => prov.name)
+            const providers = await providerSchema.find({ name: { $in: names } }).exec();
+            if (providers.length === 0 && !!names[0]) throw errorConfig.providerNotFound
+            const prov = providers.map(p => p._id)
+
             const clientData = {
                 name: data.name,
                 email: data.email,
-                phone: data.phone
-            }
-
-            const names = data.providers.map((prov) => prov.name)
-            const providers = await providerSchema.find({ name: { $in: names } }).exec();
-            console.log('providers', providers)
-            console.log('names', names)
-
-            let prov = providers.map(p => p._id)
-            clientSchema.create({
-                ...clientData,
+                phone: data.phone,
                 providers: [...prov]
-            }, async function () {
-                const client = await clientSchema.findOne({ email: clientData.email }).populate({ path: 'providers' }).exec();
-                console.log('client', client)
-                res.json(client);
+            }
+            clientSchema.create({ ...clientData }, async function (err) {
+                try {
+                    if (err) throw err
+                    const client = await clientSchema.findOne({ email: clientData.email }).populate({ path: 'providers' }).exec();
+                    if (!client) throw errorConfig.emailValidationError
 
+                    res.json(client);
+                }
+                catch (err) {
+                    next(err)
+                }
             });
         }
         catch (err) {
-            console.log(err)
             next(err)
         }
     }
 
     update = async (req, res, next) => {
         try {
+            const validId = mongoose.Types.ObjectId.isValid(req.params.id);
+            if (!validId) throw errorConfig.clientNotFound
             const client = await clientSchema.findOne({
                 _id: req.params.id,
-
             });
-            if (!client) throw errorConfig.taskNotFound;
+            if (!client) throw errorConfig.clientNotFound;
 
             const { name, email, phone } = req.body;
-            name && (client.name = name);
-            email && (client.email = email);
-            phone && (client.phone = phone);
+            if (!name || !email || !phone) {
+                throw errorConfig.pathIsRequired
+            }
 
             const names = req.body.providers.map(p => p.name)
             const providers = await providerSchema.find({ name: { $in: names } }).exec();
-            console.log('providers', providers)
-
             let prov = providers.map(p => p._id)
             prov && (client.providers = [...prov]);
+            name && (client.name = name);
+            email && (client.email = email);
+            phone && (client.phone = phone);
             await client.save();
-            console.log(client)
 
             const editedClient = await clientSchema.findOne({ _id: req.params.id, }).populate({ path: 'providers' }).exec();
             if (!client) throw errorConfig.taskNotFound;
-            console.log(editedClient)
             res.json(editedClient);
 
         } catch (err) {
@@ -94,9 +95,11 @@ class ClientController {
 
     delete = async (req, res, next) => {
         try {
+            const validId = mongoose.Types.ObjectId.isValid(req.params.id);
+            if (!validId) throw errorConfig.clientNotFound
+
             const client = await clientSchema.findOneAndDelete({
                 _id: req.params.id,
-
             });
 
             if (!client) throw errorConfig.taskNotFound;

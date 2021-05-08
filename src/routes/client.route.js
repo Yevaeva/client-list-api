@@ -1,5 +1,4 @@
 const express = require('express')
-const validator = require('../middlewares/validator.middleware')
 const clientRouter = express.Router()
 const clientController = require('../controllers/client.controller');
   
@@ -15,8 +14,6 @@ clientRouter.post('/', clientController.create);
 clientRouter.put('/:id', clientController.update);
 
 clientRouter.delete('/:id', clientController.delete); 
-
-
 
 
 

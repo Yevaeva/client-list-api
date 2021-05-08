@@ -1,5 +1,4 @@
 const express = require('express');
-const validator = require('../middlewares/validator.middleware');
 const providerRouter = express.Router();
 const providerController = require('../controllers/provider.controller');
   

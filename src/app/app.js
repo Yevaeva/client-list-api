@@ -1,14 +1,13 @@
-'use strict';
 
 Promise = require('bluebird');
-const express = require('express'),
-  helmet = require('helmet'),
-  compress = require('compression'),
-  cors = require('cors'),
-  logger = require('morgan'),
-  body_parser = require('body-parser'),
-  error_handler = require('errorhandler'),
-  path = require('path');
+const  express = require('express');
+const  helmet = require('helmet');
+const  compress = require('compression');
+const  cors = require('cors');
+const  logger = require('morgan');
+const  body_parser = require('body-parser');
+const  error_handler = require('errorhandler');
+const  path = require('path');
 
 // Initialize express app
 const app = express();
@@ -24,17 +23,11 @@ app.use(
 app.is_running = Promise.pending();
 app.db_connect = require('./mongo');
 
-app.get('/downloads/:filename', (req, res)=>{
-  const filePath = path.join(__dirname, '../../public/downloads/'+req.params.filename);
-  res.download(filePath);
-});
+// app.get('/downloads/:filename', (req, res)=>{
+//   const filePath = path.join(__dirname, '../../public/downloads/'+req.params.filename);
+//   res.download(filePath);
+// });
 
-//TODO change the limit
-app.use(body_parser.json({limit: '10mb'}));
-app.use(body_parser.urlencoded({
-  limit: '10mb',
-  extended: true
-}));
 
 app.use(cors());
 
@@ -81,7 +74,6 @@ app.enable('strict routing');
 
 require('./routes')(app);
 
-// Handle errors
 require('./error-handler')(app);
 
 module.exports = app;
