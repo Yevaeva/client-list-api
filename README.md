@@ -28,3 +28,9 @@ Remove `.example` extension from configuration file located in `/config/env/`
 ## Running the project
 
     $ npm start
+
+    
+
+## Swagger
+
+You can check swagger documentation in http://localhost:3001/api-docs/
