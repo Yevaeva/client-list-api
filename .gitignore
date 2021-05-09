@@ -9,8 +9,8 @@ temp/*
 */.vscode
 /.history
 /config/env/*.env
+/config/env/.env
 */package-lock.json
-/config/_swagger.json
 !/uploads/.gitkeep
 !/temp/.gitkeep
 /temp

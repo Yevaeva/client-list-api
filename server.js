@@ -1,6 +1,6 @@
 
 // Set default environment variable
-process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
+// process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
 // load configuration
 const config = require('./config/');

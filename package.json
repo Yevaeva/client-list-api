@@ -1,14 +1,13 @@
 {
-  "name": "todo-list-api",
+  "name": "Client-list-api",
   "version": "0.0.1",
-  "description": "Todo List API",
-  "author": "Masis Karapetyan (Sirius MK)",
+  "description": "CLient list API",
+  "author": "Yeva Terteryan",
   "main": "server.js",
   "private": true,
   "license": "ISC",
   "scripts": {
-    "start": "export NODE_ENV=dev|| set NODE_ENV=dev&& node server.js",
-    "prod": "export NODE_ENV=prod|| set NODE_ENV=prod&& node server.js",
+    "start": "node ./server",
     "dev": "nodemon server.js"
   },
   "dependencies": {

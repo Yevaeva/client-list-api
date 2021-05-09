@@ -21,7 +21,7 @@ class ProviderController {
     createProvider = async (req, res, next) => {
 
         try {
-            const data = req.body
+            const data = req.body 
             console.log(data) 
 
             const newProvider = await providerSchema.create({

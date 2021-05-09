@@ -9,18 +9,34 @@ class ClientController {
 
     getClients = async (req, res, next) => {
         try {
-            const { userId } = res.locals,
-                { query } = req;
 
-            const dbQuery = {
+            const { query } = req;
 
-            };
+            const dbQuery = {};
+
+            if (query.search) {
+                const searchReg = new RegExp(query.search, 'ig');
+                dbQuery.$or = [{ name: searchReg }, { email: searchReg }];
+            }
+
 
             const sort = {};
+            if (query.sort) {
+                switch (query.sort) {
+                    case 'a-z':
+                        sort.name = 1;
+                        break;
+                    case 'z-a':
+                        sort.name = -1;
+                        break;
+                }
+            }
 
             const clients = await clientSchema.find(dbQuery).sort(sort).populate({ path: 'providers' }).exec();
             if (!clients) throw errorConfig.clientNotFound;
             res.json(clients);
+
+
 
         }
         catch (err) {
@@ -69,7 +85,6 @@ class ClientController {
                 _id: req.params.id,
             });
             if (!client) throw errorConfig.clientNotFound;
-
             const { name, email, phone } = req.body;
             if (!name || !email || !phone) {
                 throw errorConfig.pathIsRequired
@@ -88,7 +103,8 @@ class ClientController {
             if (!client) throw errorConfig.taskNotFound;
             res.json(editedClient);
 
-        } catch (err) {
+        } 
+        catch (err) {
             next(err)
         }
     }
