@@ -1,86 +1,71 @@
-const errorConfig = require('../../config/error.config')
-const providerSchema = require('../schemas/provider.schema');
-const mongoose = require('mongoose')
-
+const errorConfig = require("../../config/error.config");
+const providerSchema = require("../schemas/provider.schema");
+const mongoose = require("mongoose");
 
 class ProviderController {
+  getProviders = async (req, res, next) => {
+    try {
+      const providers = await providerSchema.find({}).exec();
+      if (!providers) throw errorConfig.providerNotFound;
 
-    getProviders = async (req, res, next) => {
-
-        try {
-            const providers = await providerSchema.find({}).exec();
-            if (!providers) throw errorConfig.providerNotFound;
-
-            res.json(providers);
-        }
-        catch (err) {
-            next(err)
-        }
+      res.json(providers);
+    } catch (err) {
+      next(err);
     }
+  };
 
-    createProvider = async (req, res, next) => {
+  createProvider = async (req, res, next) => {
+    try {
+      const data = req.body;
+      const newProvider = await providerSchema.create({
+        name: data.name,
+      });
 
-        try {
-            const data = req.body 
-            console.log(data) 
+      if (!newProvider) throw errorConfig.providerNotFound;
 
-            const newProvider = await providerSchema.create({
-                name: data.name
-            });
-
-            if (!newProvider) throw errorConfig.providerNotFound;
-
-            newProvider.save(function (err) {
-                if (err) throw errorConfig.providerNotFound
-                res.json(newProvider);
-            });
-        }
-        catch (err) {
-            console.log(err)
-            next(err)
-        }
+      newProvider.save(function (err) {
+        if (err) throw errorConfig.providerNotFound;
+        res.json(newProvider);
+      });
+    } catch (err) {
+      next(err);
     }
+  };
 
-    updateProvider = async (req, res, next) => {
+  updateProvider = async (req, res, next) => {
+    try {
+      const validId = mongoose.Types.ObjectId.isValid(req.params.id);
+      if (!validId) throw errorConfig.providerNotFound;
+      const { name } = req.body;
 
-        try {
-            const validId = mongoose.Types.ObjectId.isValid(req.params.id);
-            if (!validId) throw errorConfig.providerNotFound;
-            const { name } = req.body;
-
-            if (!name) throw errorConfig.nothingToUpdate
-            const provider = await providerSchema.findOne({
-                _id: req.params.id,
-
-            });
-            if (!provider) throw errorConfig.providerNotFound;
-            name && (provider.name = name);
-            await provider.save();
-            res.json(provider);
-
-        }
-        catch (err) {
-            next(err)
-        }
+      if (!name) throw errorConfig.nothingToUpdate;
+      const provider = await providerSchema.findOne({
+        _id: req.params.id,
+      });
+      if (!provider) throw errorConfig.providerNotFound;
+      name && (provider.name = name);
+      await provider.save();
+      res.json(provider);
+    } catch (err) {
+      next(err);
     }
+  };
 
-    deleteProvider = async (req, res, next) => {
+  deleteProvider = async (req, res, next) => {
+    try {
+      const validId = mongoose.Types.ObjectId.isValid(req.params.id);
+      if (!validId) throw errorConfig.providerNotFound;
 
-        try {
-            const validId = mongoose.Types.ObjectId.isValid(req.params.id);
-            if (!validId) throw errorConfig.providerNotFound;
+      const provider = await providerSchema.findOneAndDelete({
+        _id: req.params.id,
+      });
 
-            const provider = await providerSchema.findOneAndDelete({
-                _id: req.params.id,
-            });
-
-            if (!provider) throw errorConfig.providerNotFound;
-            res.json({ success: true });
-        }
-        catch (err) {
-            next(err)
-        }
+      if (!provider) throw errorConfig.providerNotFound;
+      res.json({ success: true });
+    } catch (err) {
+      next(err);
     }
+  };
 }
 
 module.exports = new ProviderController();

@@ -4,5 +4,5 @@ if (port == null || port == "") {
 }
 
 module.exports = {
-  'api_port': +port,
-}; 
+  api_port: +port,
+};

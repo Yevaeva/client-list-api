@@ -1,5 +1,5 @@
 module.exports = {
-  "connection": {
-    "url": process.env.MONGO_API
+  connection: {
+    url: process.env.MONGO_API,
   },
 };
